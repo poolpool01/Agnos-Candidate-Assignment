@@ -13,7 +13,7 @@ The system demonstrates real-time synchronization using WebSockets, form validat
 ## 🛠 Tech Stack
 
 ### Frontend
-- React (Vite)
+- React.js
 - Tailwind CSS
 - React Router
 - React Hook Form
