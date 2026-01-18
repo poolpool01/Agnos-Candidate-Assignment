@@ -7,24 +7,21 @@ export function useSocket() {
   const [data, setData] = useState({})
 
   if (!socket) {
-    socket = io("http://localhost:3001")
+    socket = io(import.meta.env.VITE_SOCKET_URL, {
+      transports: ["websocket"],
+    })
 
     socket.on("connect", () => {
       console.log("SOCKET CONNECTED:", socket.id)
     })
 
-    socket.on("disconnect", (reason) => {
-      console.log("SOCKET DISCONNECTED:", reason)
-    })
-
     socket.on("connect_error", (err) => {
-      console.error("SOCKET CONNECT ERROR:", err.message)
+      console.error("SOCKET ERROR:", err.message)
     })
   }
 
   useEffect(() => {
     const handleUpdate = (payload) => {
-      console.log("RECEIVE staff:update", payload)
       setData(payload)
     }
 
