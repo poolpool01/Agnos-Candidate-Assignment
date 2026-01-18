@@ -31,6 +31,7 @@ export default function PatientForm() {
 
         const result = patientSchema.safeParse(watchedData)
         if (result.success) {
+            console.log("EMIT patient:update", result.data)
             socket.emit("patient:update", cleanData(result.data))
         }
     }, [watchedData, socket, isSubmitted])
@@ -88,17 +89,25 @@ export default function PatientForm() {
 
                 <InputField label="Religion (Optional)" name="religion" register={register} disabled={isSubmitted} />
 
+                {!isSubmitted && (
+                    <button
+                        type="submit"
+                        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                    >
+                        Submit
+                    </button>
+                )}
+
                 {isSubmitted && (
                     <button
                         type="button"
-                        onClick={() => {
-                            window.location.reload()
-                        }}
+                        onClick={() => window.location.reload()}
                         className="w-full bg-gray-500 text-white py-2 rounded"
                     >
                         New Patient
                     </button>
                 )}
+
 
             </form>
         </div>

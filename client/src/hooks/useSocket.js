@@ -1,29 +1,37 @@
 import { io } from "socket.io-client"
 import { useEffect, useState } from "react"
 
-const socket = io("https://agnos-assingment.onrender.com", {
-  path: "/socket.io",
-  secure: true,
-})
+let socket
 
 export function useSocket() {
   const [data, setData] = useState({})
 
-  useEffect(() => {
+  if (!socket) {
+    socket = io("http://localhost:3001")
+
     socket.on("connect", () => {
-      console.log("Socket connected:", socket.id)
+      console.log("SOCKET CONNECTED:", socket.id)
     })
 
-    socket.on("staff:update", (payload) => {
-      setData(payload)
+    socket.on("disconnect", (reason) => {
+      console.log("SOCKET DISCONNECTED:", reason)
     })
 
     socket.on("connect_error", (err) => {
-      console.error("Socket error:", err.message)
+      console.error("SOCKET CONNECT ERROR:", err.message)
     })
+  }
+
+  useEffect(() => {
+    const handleUpdate = (payload) => {
+      console.log("RECEIVE staff:update", payload)
+      setData(payload)
+    }
+
+    socket.on("staff:update", handleUpdate)
 
     return () => {
-      socket.off("staff:update")
+      socket.off("staff:update", handleUpdate)
     }
   }, [])
 
